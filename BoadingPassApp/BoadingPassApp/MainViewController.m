@@ -28,32 +28,11 @@
         NSFetchRequest *request = [[NSFetchRequest alloc] init];
         request.entity = [NSEntityDescription entityForName:[BoardingCard entityName] inManagedObjectContext:self.managedObjectContext];
         request.fetchBatchSize = 20;
-        
-        
-        //NSSortDescriptor *dateDescriptor = [[NSSortDescriptor alloc] initWithKey:@"from.szName" ascending:NO];
-        //NSArray *sortDescriptors = [[NSArray alloc] initWithObjects:dateDescriptor,nil];
-        //[request setSortDescriptors:sortDescriptors];
-     
-        
         request.sortDescriptors = [[NSArray alloc] initWithObjects:[[NSSortDescriptor alloc] initWithKey:@"from.szName" ascending:NO],nil];
         _boardingCardsList = [[NSFetchedResultsController alloc]
                              initWithFetchRequest:request managedObjectContext:self.managedObjectContext sectionNameKeyPath:nil cacheName:nil];
     }
     return _boardingCardsList;
-}
-
-
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-    
-    // load all the data
-   
-   
-    // process all the data
-    
-    
-	// Do any additional setup after loading the view, typically from a nib.
 }
 
 -(void)viewWillAppear:(BOOL)animated{
@@ -84,7 +63,7 @@
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    if ([[segue identifier] isEqualToString:@"showAlternate"]) {
+    if ([[segue identifier] isEqualToString:@"showResult"]) {
         [[segue destinationViewController] setDelegate:self];
         [[segue destinationViewController] setListOfSortedBoardingPass:self.listOfSortedBoardingCards];
     }
@@ -121,7 +100,11 @@
     return cell;
 }
 
-
+#pragma mark - IBActions
+/**
+ Sort trip button has been pressed:
+ @param sender
+ */
 -(IBAction)startSorting:(id)sender{
     self.btnSortBoardingPass.enabled = NO;
     [self sortingHasStarted];
@@ -129,7 +112,10 @@
     
 }
 
-
+#pragma mark - UI refresh methods
+/**
+ Updates the interface because the boarding cards are being sorted
+ */
 -(void)sortingHasStarted{
     self.loadingSpinner.hidden = NO;
     [self.loadingSpinner startAnimating];
@@ -137,10 +123,13 @@
     self.tableView.hidden = YES;
     
     [self sortBoardingCards];
-
+    
 }
 
-
+#pragma mark - Other methods
+/**
+ Algorithm to sort all the boarding cards
+ */
 -(void)sortBoardingCards{
     NSMutableDictionary *listOfOrigins = [[NSMutableDictionary alloc]init];
     NSMutableDictionary *listOfDestinations = [[NSMutableDictionary alloc]init];
@@ -149,7 +138,7 @@
         [listOfOrigins setObject:boardingCard forKey:boardingCard.from.szName];
         [listOfDestinations setObject:boardingCard forKey:boardingCard.to.szName];
     }];
-
+    
     NSMutableSet *originsKeys = [[NSSet setWithArray:[listOfOrigins allKeys]]mutableCopy];
     NSMutableSet *destinationsKeys = [[NSSet setWithArray:[listOfDestinations allKeys]]mutableCopy];
     NSString *origin;
@@ -159,8 +148,6 @@
             break;
         }
     }
-    NSLog(@"origin %@", origin);
-
     
     NSMutableArray * newListOfBoardingPass = [[NSMutableArray alloc]init];
     BoardingCard *prevObj = [listOfOrigins objectForKey:origin];
@@ -173,15 +160,25 @@
     
     [self showNewList:newListOfBoardingPass];
     self.listOfSortedBoardingCards = newListOfBoardingPass;
+    
+    //It sorts too quickly so in purpuse it will wait 3 seconds until display sorted list.
     [self performSelector:@selector(loadSorted) withObject:self afterDelay:3];
-
+    
 }
 
+/**
+ Updates the interfaces to load all the boarding cards sorted
+ */
 -(void)loadSorted{
-    [self performSegueWithIdentifier:@"showAlternate" sender:self];
-
-
+    [self performSegueWithIdentifier:@"showResult" sender:self];
 }
+
+#pragma mark - Log methods
+
+/**
+ Shows in the console the list of sorted boarding cards
+ @param list
+ */
 -(void)showNewList:(NSMutableArray*)list{
     for (BoardingCard *bc in list){
         NSLog(@"%@ From: %@ To: %@",bc.transport.szName,bc.from.szName,bc.to.szName);

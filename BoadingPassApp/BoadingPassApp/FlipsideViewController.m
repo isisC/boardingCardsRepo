@@ -46,7 +46,6 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    NSLog(@"rows %d",[self.listOfSortedBoardingPass count]);
     return [self.listOfSortedBoardingPass count];
 }
 
