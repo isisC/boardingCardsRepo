@@ -45,6 +45,7 @@
     self.loadingSpinner.hidden = YES;
     self.lblSortingMessage.hidden = YES;
     self.btnSortBoardingPass.enabled = YES;
+    self.lblUnsortedMessage.hidden = NO;
 }
 
 
@@ -108,8 +109,6 @@
 -(IBAction)startSorting:(id)sender{
     self.btnSortBoardingPass.enabled = NO;
     [self sortingHasStarted];
-    
-    
 }
 
 #pragma mark - UI refresh methods
@@ -121,7 +120,7 @@
     [self.loadingSpinner startAnimating];
     self.lblSortingMessage.hidden = NO;
     self.tableView.hidden = YES;
-    
+    self.lblUnsortedMessage.hidden = YES;
     [self sortBoardingCards];
     
 }
@@ -157,8 +156,8 @@
         prevObj = [listOfOrigins objectForKey:prevObj.to.szName];
         [newListOfBoardingPass addObject:prevObj];
     }
-    
-    [self showNewList:newListOfBoardingPass];
+    //Uncomment this to show the new list in the debug console
+    //[self showNewList:newListOfBoardingPass];
     self.listOfSortedBoardingCards = newListOfBoardingPass;
     
     //It sorts too quickly so in purpuse it will wait 3 seconds until display sorted list.

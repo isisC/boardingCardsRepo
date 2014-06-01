@@ -17,4 +17,5 @@
 @property (weak, nonatomic) IBOutlet UIButton *btnSortBoardingPass;
 @property (weak, nonatomic) IBOutlet UILabel *lblSortingMessage;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *loadingSpinner;
+@property (weak, nonatomic) IBOutlet UILabel *lblUnsortedMessage;
 @end

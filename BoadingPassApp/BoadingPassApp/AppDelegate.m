@@ -160,6 +160,7 @@
     return [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
 }
 
+#pragma mark - Methods to manage all the data
 
 -(void)loadData{
     NSError *error = nil;;
@@ -167,61 +168,61 @@
     BoardingCard *b1 = [NSEntityDescription insertNewObjectForEntityForName:BoardingCardConstant inManagedObjectContext:self.managedObjectContext];
     b1.from = [City cityFromName:@"Santander" inManagedObjectContext:self.managedObjectContext];
     b1.to = [City cityFromName:@"Madrid" inManagedObjectContext:self.managedObjectContext];
-    b1.extraInfo = @"Gate 12 bla bla bla";
+    b1.extraInfo = @"Seat 4D";
     b1.transport = [Transport transportFromName:@"Train" inManagedObjectContext:self.managedObjectContext];
     
     BoardingCard *b2 = [NSEntityDescription insertNewObjectForEntityForName:BoardingCardConstant inManagedObjectContext:self.managedObjectContext];
     b2.from = [City cityFromName:@"Madrid" inManagedObjectContext:self.managedObjectContext];
     b2.to = [City cityFromName:@"Gerona" inManagedObjectContext:self.managedObjectContext];
-    b2.extraInfo = @"Gate 12 bla bla bla";
+    b2.extraInfo = @"Gate 12 Seat 17D";
     b2.transport = [Transport transportFromName:@"Plane" inManagedObjectContext:self.managedObjectContext];
     
     BoardingCard *b3 = [NSEntityDescription insertNewObjectForEntityForName:BoardingCardConstant inManagedObjectContext:self.managedObjectContext];
     b3.from = [City cityFromName:@"Gerona" inManagedObjectContext:self.managedObjectContext];
     b3.to = [City cityFromName:@"Barcelona" inManagedObjectContext:self.managedObjectContext];
-    b3.extraInfo = @"Gate 12 bla bla bla";
+    b3.extraInfo = @"No seat assigned";
     b3.transport = [Transport transportFromName:@"Bus" inManagedObjectContext:self.managedObjectContext];
     
     BoardingCard *b4 = [NSEntityDescription insertNewObjectForEntityForName:BoardingCardConstant inManagedObjectContext:self.managedObjectContext];
     b4.from = [City cityFromName:@"Barcelona" inManagedObjectContext:self.managedObjectContext];
     b4.to = [City cityFromName:@"Paris" inManagedObjectContext:self.managedObjectContext];
-    b4.extraInfo = @"Gate 12 bla bla bla";
+    b4.extraInfo = @"Gate 24 Seat 30C";
     b4.transport = [Transport transportFromName:@"Plane" inManagedObjectContext:self.managedObjectContext];
     
     BoardingCard *b5 = [NSEntityDescription insertNewObjectForEntityForName:BoardingCardConstant inManagedObjectContext:self.managedObjectContext];
     b5.from = [City cityFromName:@"Paris" inManagedObjectContext:self.managedObjectContext];
     b5.to = [City cityFromName:@"Brussels" inManagedObjectContext:self.managedObjectContext];
-    b5.extraInfo = @"Gate 12 bla bla bla";
+    b5.extraInfo = @"Seat 13F";
     b5.transport = [Transport transportFromName:@"Train" inManagedObjectContext:self.managedObjectContext];
     
     BoardingCard *b6 = [NSEntityDescription insertNewObjectForEntityForName:BoardingCardConstant inManagedObjectContext:self.managedObjectContext];
     b6.from = [City cityFromName:@"Brussels" inManagedObjectContext:self.managedObjectContext];
     b6.to = [City cityFromName:@"Amsterdam" inManagedObjectContext:self.managedObjectContext];
-    b6.extraInfo = @"Gate 12 bla bla bla";
+    b6.extraInfo = @"No seat assigned";
     b6.transport = [Transport transportFromName:@"Bus" inManagedObjectContext:self.managedObjectContext];
     
     BoardingCard *b7 = [NSEntityDescription insertNewObjectForEntityForName:BoardingCardConstant inManagedObjectContext:self.managedObjectContext];
     b7.from = [City cityFromName:@"Amsterdam" inManagedObjectContext:self.managedObjectContext];
     b7.to = [City cityFromName:@"London" inManagedObjectContext:self.managedObjectContext];
-    b7.extraInfo = @"Gate 12 bla bla bla";
+    b7.extraInfo = @"Gate 89 Seat 40C";
     b7.transport = [Transport transportFromName:@"Plane" inManagedObjectContext:self.managedObjectContext];
     
     BoardingCard *b8 = [NSEntityDescription insertNewObjectForEntityForName:BoardingCardConstant inManagedObjectContext:self.managedObjectContext];
     b8.from = [City cityFromName:@"London" inManagedObjectContext:self.managedObjectContext];
     b8.to = [City cityFromName:@"New York" inManagedObjectContext:self.managedObjectContext];
-    b8.extraInfo = @"Gate 12 bla bla bla";
+    b8.extraInfo = @"Gate 30 Seat 31D";
     b8.transport = [Transport transportFromName:@"Plane" inManagedObjectContext:self.managedObjectContext];
     
     BoardingCard *b9 = [NSEntityDescription insertNewObjectForEntityForName:BoardingCardConstant inManagedObjectContext:self.managedObjectContext];
     b9.from = [City cityFromName:@"New York" inManagedObjectContext:self.managedObjectContext];
     b9.to = [City cityFromName:@"Miami" inManagedObjectContext:self.managedObjectContext];
-    b9.extraInfo = @"Gate 12 bla bla bla";
+    b9.extraInfo = @"Seat 21R";
     b9.transport = [Transport transportFromName:@"Train" inManagedObjectContext:self.managedObjectContext];
     
     BoardingCard *b10 = [NSEntityDescription insertNewObjectForEntityForName:BoardingCardConstant inManagedObjectContext:self.managedObjectContext];
     b10.from = [City cityFromName:@"Miami" inManagedObjectContext:self.managedObjectContext];
     b10.to = [City cityFromName:@"San Francisco" inManagedObjectContext:self.managedObjectContext];
-    b10.extraInfo = @"Gate 12 bla bla bla";
+    b10.extraInfo = @"Gate 21 Seat 37B";
     b10.transport = [Transport transportFromName:@"Plane" inManagedObjectContext:self.managedObjectContext];
 
     
@@ -234,25 +235,35 @@
     }
 }
 
-
+/**
+ Cleans database before loading all the boarding list
+ */
 -(void)cleanDatabase{
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
 	request.entity = [NSEntityDescription entityForName:BoardingCardConstant inManagedObjectContext:self.managedObjectContext];
     
     NSError *error = nil;
     NSArray *listOfBoardingPass = [self.managedObjectContext executeFetchRequest:request error:&error];
-    NSLog(@"%s %d",__func__,[listOfBoardingPass count]);
     for (BoardingCard *bc in listOfBoardingPass){
         [self.managedObjectContext deleteObject:bc];
     }
 }
 
+#pragma mark - Methods to log all the database content
+
+/**
+ Logs in the console all the current information that is loaded in the database
+ */
 -(void)showDataBaseSnapshot{
     [self showLogEntity:BoardingCardConstant];
     [self showLogEntity:CityConstant];
     [self showLogEntity:TransportConstant];
-
 }
+
+/**
+ Logs in the console an entity
+ @param entity that we want to log in the console
+ */
 -(void)showLogEntity:(NSString*)entityName{
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
 	request.entity = [NSEntityDescription entityForName:entityName inManagedObjectContext:self.managedObjectContext];
@@ -273,15 +284,28 @@
     }
 }
 
+/**
+ Logs the content of a boarding card
+ @param boardingCard
+ */
 -(void)showBPDetail:(BoardingCard*)bp{
     NSLog(@"from %@ to %@ and transport %@, with extraInfo %@\n",bp.from.szName,bp.to.szName,bp.transport.szName,bp.extraInfo);
 }
 
+/**
+ Logs the content of a city
+ @param city
+ */
 -(void)showCityDetail:(City*)c{
     NSLog(@"City: %@\n",c.szName);
 }
 
+/**
+ Logs the content of a mean of transport
+ @param transport
+ */
 -(void)showTransportDetail:(Transport*)t{
     NSLog(@"Transport: %@\n",t.szName);
 }
+
 @end
