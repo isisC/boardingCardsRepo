@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="3401" systemVersion="12F45" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+    <entity name="BoardingCard" representedClassName="BoardingCard" syncable="YES">
+        <attribute name="extraInfo" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="from" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="City" inverseName="from" inverseEntity="City" syncable="YES"/>
+        <relationship name="to" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="City" inverseName="to" inverseEntity="City" syncable="YES"/>
+        <relationship name="transport" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Transport" inverseName="boardingPass" inverseEntity="Transport" syncable="YES"/>
+    </entity>
+    <entity name="City" representedClassName="City" syncable="YES">
+        <attribute name="szCurrency" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="szMainLanguage" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="szName" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="from" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="BoardingCard" inverseName="from" inverseEntity="BoardingCard" syncable="YES"/>
+        <relationship name="to" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="BoardingCard" inverseName="to" inverseEntity="BoardingCard" syncable="YES"/>
+    </entity>
+    <entity name="Transport" representedClassName="Transport" syncable="YES">
+        <attribute name="szName" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="boardingPass" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="BoardingCard" inverseName="transport" inverseEntity="BoardingCard" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="BoardingCard" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="City" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="Transport" positionX="0" positionY="0" width="0" height="0"/>
+    </elements>
+</model>
